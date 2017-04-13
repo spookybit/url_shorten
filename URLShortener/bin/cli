@@ -1,0 +1,19 @@
+puts "Enter your email"
+current_user = User.where(email: gets.chomp).first
+
+puts "Would you like to visit a shortened URL? or create a new one?"
+response = gets.chomp.downcase
+
+if response == "create"
+  puts "Enter your URL"
+  url = ShortenedUrl.create_new(current_user, gets.chomp)
+
+  puts "New url is: #{url.short_url}"
+else
+  puts "Type in your shortened URL"
+  url = ShortenedUrl.where(short_url: gets.chomp).first
+  Launchy.open(url.long_url)
+  Visit.record_visit!(current_user, url)
+end
+
+puts "Goodbye, sentient."
